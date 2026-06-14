@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Cliente - Hotel Don Lucho</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" th:href="@{/utiles/images/favicon.png}" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/utiles/images/favicon.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/utiles/images/favicon.png}">
+    <link rel="apple-touch-icon" th:href="@{/utiles/images/favicon.png}">
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <nav class="nav">
+        <div class="nav_logo">
+            <a th:href="@{/}">
+                <h2>DON LUCHO</h2>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/dashboard}">Resumen</a></li>
+            <li><a th:href="@{/reservas}">Reservas</a></li>
+            <li><a th:href="@{/clientes}" class="active">Clientes</a></li>
+            <li><a th:href="@{/habitaciones}">Habitaciones</a></li>
+            <li><a th:href="@{/miembros}">Miembros</a></li>
+            <li><a th:href="@{/administradores}">Admin</a></li>
+            <li><a th:href="@{/logout}"><input type="button" value="Cerrar Sesión" id="auth-button"></a></li>
+        </ul>
+        <div class="menu-toggle">
+            <img th:src="@{/utiles/images/barra.png}" class="nav_img" alt="menu">
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <main class="main-content">
+            <div class="form-container">
+                <h1
+                    style="color: var(--accent-gold); text-align: center; margin-bottom: 2rem; font-family: var(--font-heading);">
+                    Registrar Cliente</h1>
+                <div th:if="${error != null}"
+                    style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                    <span th:text="${error}"></span>
+                </div>
+                <div th:if="${success != null}"
+                    style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                    <span th:text="${success}"></span>
+                </div>
+                <div id="js-error"
+                    style="display:none; background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                </div>
+                <form method="POST" th:action="@{/clientes/guardar}" th:object="${cliente}" id="registroClienteForm">
+                    <input type="hidden" th:field="*{idCliente}">
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="dni" name="dni" th:field="*{dni}" required maxlength="8"
+                                pattern="[0-9]{8}" title="El DNI debe tener 8 dígitos numéricos" class="form-control"
+                                style="flex: 1; margin-bottom: 0;">
+                            <button type="button" id="btn-consultar" class="btn-secondary"
+                                style="width: auto; padding: 0 1.5rem; white-space: nowrap; margin-bottom: 0;">Consultar
+                                RENIEC</button>
+                        </div>
+                        <small id="dni-status" style="display: block; margin-top: 5px; min-height: 20px;"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres">Nombres:</label>
+                        <input type="text" id="nombres" name="nombres" th:field="*{nombres}" required readonly
+                            class="form-control" style="opacity: 0.7; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos:</label>
+                        <input type="text" id="apellidos" name="apellidos" th:field="*{apellidos}" required readonly
+                            class="form-control" style="opacity: 0.7; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" name="telefono" th:field="*{telefono}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email (Opcional):</label>
+                        <input type="email" id="email" name="email" th:field="*{email}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_habitacion">Asignar Habitación:</label>
+                        <select id="id_habitacion" name="id_habitacion" th:field="*{idHabitacion}" class="form-control">
+                            <option value="">-- Seleccione una habitación --</option>
+                            <option th:each="hab : ${habitaciones}" th:value="${hab.idHabitacion}"
+                                th:text="${hab.nombreSede + ' - ' + hab.numeroHabitacion}"></option>
+                        </select>
+                    </div>
+                    <div class="form-actions" style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn-primary">Registrar Cliente</button>
+                        <a th:href="@{/clientes}" class="btn-secondary"
+                            style="text-align: center; text-decoration: none;">Volver</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnConsultar = document.getElementById('btn-consultar');
+            const inputDni = document.getElementById('dni');
+            const inputNombres = document.getElementById('nombres');
+            const inputApellidos = document.getElementById('apellidos');
+            const statusMsg = document.getElementById('dni-status');
+            btnConsultar.addEventListener('click', function () {
+                const dni = inputDni.value.trim();
+                if (dni.length !== 8) {
+                    statusMsg.textContent = 'El DNI debe tener 8 dígitos.';
+                    statusMsg.style.color = '#e74c3c';
+                    return;
+                }
+                statusMsg.textContent = 'Consultando...';
+                statusMsg.style.color = '#3498db';
+                btnConsultar.disabled = true;
+                inputNombres.value = '';
+                inputApellidos.value = '';
+                fetch('/api/consultar_dni', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'dni=' + encodeURIComponent(dni)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            inputNombres.value = data.nombres;
+                            inputApellidos.value = data.apellidoPaterno + ' ' + data.apellidoMaterno;
+                            statusMsg.textContent = 'Datos encontrados exitosamente.';
+                            statusMsg.style.color = '#2ecc71';
+                        } else {
+                            statusMsg.textContent = data.message || 'No se encontraron datos para este DNI.';
+                            statusMsg.style.color = '#e74c3c';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        statusMsg.textContent = 'Error al consultar el servicio.';
+                        statusMsg.style.color = '#e74c3c';
+                    })
+                    .finally(() => {
+                        btnConsultar.disabled = false;
+                    });
+            });
+            document.getElementById('registroClienteForm').addEventListener('submit', function (e) {
+                const telefono = document.getElementById('telefono').value;
+                const errorDiv = document.getElementById('js-error');
+                const phoneRegex = /^9[0-9]{8}$/;
+                if (telefono && !phoneRegex.test(telefono)) {
+                    e.preventDefault();
+                    errorDiv.textContent = 'El teléfono debe tener 9 dígitos y empezar con 9';
+                    errorDiv.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

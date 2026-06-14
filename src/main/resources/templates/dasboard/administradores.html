@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administradores - Panel de Administración</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" th:href="@{/utiles/images/favicon.png}" type="image/png">
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <nav class="nav">
+        <div class="nav_logo">
+            <a th:href="@{/}">
+                <h2>DON LUCHO</h2>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/dashboard}">Resumen</a></li>
+            <li><a th:href="@{/reservas}">Reservas</a></li>
+            <li><a th:href="@{/clientes}">Clientes</a></li>
+            <li><a th:href="@{/habitaciones}">Habitaciones</a></li>
+            <li><a th:href="@{/miembros}">Miembros</a></li>
+            <li><a th:href="@{/administradores}" class="active">Admin</a></li>
+            <li><a th:href="@{/logout}"><input type="button" value="Cerrar Sesión" id="auth-button"></a></li>
+        </ul>
+        <div class="menu-toggle">
+            <img th:src="@{/utiles/images/barra.png}" class="nav_img" alt="menu">
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <main class="main-content">
+            <div class="welcome-section">
+                <h1>Gestión de Administradores</h1>
+                <div style="margin-top: 1rem;">
+                    <a th:href="@{/agregar_admin}" class="btn-primary">Registrar Nuevo Administrador</a>
+                </div>
+            </div>
+            <div th:if="${error != null}"
+                style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${success != null}"
+                style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${message != null}"
+                style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                <span th:text="${message}"></span>
+            </div>
+            <div class="custom-table-container">
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre Completo</th>
+                                <th>Email</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="admin : ${administradores}">
+                                <td data-label="ID" th:text="${admin.idUsuario}"></td>
+                                <td data-label="Nombre Completo" class="mobile-name">
+                                    <span th:text="${admin.getNombre_completo()}"></span>
+                                    <i class="fas fa-chevron-down mobile-expand-icon"></i>
+                                </td>
+                                <td data-label="Email" th:text="${admin.email}"></td>
+                                <td data-label="Fecha Registro"
+                                    th:text="${admin.fechaRegistro != null ? #temporals.format(admin.fechaRegistro, 'dd/MM/yyyy') : ''}">
+                                </td>
+                                <td data-label="Acciones">
+                                    <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                        <form th:if="${admin.idUsuario != session.userId}" method="POST"
+                                            th:action="@{/administradores}"
+                                            onsubmit="return confirm('¿Estás seguro de que deseas eliminar este administrador?');"
+                                            style="display:inline;">
+                                            <input type="hidden" name="id_usuario" th:value="${admin.idUsuario}">
+                                            <button type="submit" title="Eliminar"
+                                                style="background: none; border: none; cursor: pointer; color: #e74c3c; font-size: 1.1rem;">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                        <span th:if="${admin.idUsuario == session.userId}"
+                                            style="color: var(--text-muted); font-size: 0.9rem;">(Tú)</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>

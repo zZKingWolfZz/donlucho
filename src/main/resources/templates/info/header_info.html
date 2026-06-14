@@ -1,0 +1,57 @@
+<!-- header_info.html -->
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header_info(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Hotel Don Lucho - Información">
+
+    <link rel="preload" th:href="@{/css/style.css}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/bot.css}">
+
+    <noscript><link rel="stylesheet" th:href="@{/css/style.css}"></noscript>
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap"></noscript>
+    
+    <link rel="shortcut icon" th:href="@{/utiles/images/favicon.png}" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/utiles/images/favicon.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/utiles/images/favicon.png}">
+    <link rel="apple-touch-icon" th:href="@{/utiles/images/favicon.png}">
+    <title th:text="${title}">Información | Don Lucho</title>
+</head>
+<body>
+    <nav th:fragment="nav" class="nav">
+        <div class="nav_logo">
+            <a th:href="@{/}" style="text-decoration: none; color: inherit;">
+                <h2 class="nav_title">DON LUCHO</h2>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li class="mobile-close-btn"><i class="fas fa-times"></i></li>
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/habitaciones}">Habitaciones</a></li>
+            <th:block th:if="${session.isLoggedIn}">
+                <li th:if="${session.isAdmin}"><a th:href="@{/admin/dashboard}">Panel de Administrador</a></li>
+                <li th:unless="${session.isAdmin}"><a th:href="@{/reservar/mis_reservas}">Mis Reservas</a></li>
+                <li th:unless="${session.isAdmin}"><a th:href="@{/reservar/reservas}">Reservar</a></li>
+            </th:block>
+            <th:block th:unless="${session.isLoggedIn}">
+                <li><a href="#" onclick="alert('Debes iniciar sesión para ver tus reservas'); window.location.href='/login'">Mis Reservas</a></li>
+                <li><a href="#" onclick="alert('Debes iniciar sesión para hacer reservas'); window.location.href='/login'">Reservar</a></li>
+            </th:block>
+            <li><a th:href="@{/#footer}">Contacto</a></li>
+            <li id="auth-section">
+                <a th:if="${session.isLoggedIn}" th:href="@{/logout}"><input type="button" value="Cerrar Sesión" id="auth-button"></a>
+                <a th:unless="${session.isLoggedIn}" th:href="@{/login}" id="login-link"><input type="button" value="Iniciar Sesión" id="auth-button"></a>
+            </li>
+        </ul>
+        
+        <div class="menu-toggle">
+            <img th:src="@{/utiles/images/barra.png}" class="nav_img" alt="menu">
+        </div>
+    </nav>
+</body>
+</html>

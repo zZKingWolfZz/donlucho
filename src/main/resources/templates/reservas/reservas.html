@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Estadía | Hotel Don Lucho</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
+    <link rel="apple-touch-icon" th:href="@{/images/favicon.png}">
+</head>
+<body class="reservas-container">
+    <div class="auth-container">
+        <div class="auth-image">
+            <div class="auth-quote">
+                <h2>Tu Descanso Ideal</h2>
+                <p>Reserva ahora y asegura una experiencia inolvidable. Lujo, confort y la mejor atención te esperan.</p>
+            </div>
+        </div>
+
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <a th:href="@{/}" class="logo-text">DON LUCHO</a>
+                <h3>Reserva tu Estadía</h3>
+                <p>Completa los detalles de tu reserva</p>
+            </div>
+
+            <div id="formError" class="error-message" style="display:none; color: #e74c3c; background: rgba(231, 76, 60, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid rgba(231, 76, 60, 0.3);"></div>
+
+            <form id="reservaForm">
+                
+                <div class="form-section">
+                    <div class="form-section-title">Datos del Huésped</div>
+                    <div class="form-row">
+                        <div class="form-group dni-group">
+                            <label for="dni">DNI</label>
+                            <div class="input-group">
+                                <input type="text" id="dni" name="dni" class="form-control" placeholder="Ingrese DNI" maxlength="8" pattern="[0-9]{8}" required>
+                                <button type="button" id="btn-buscar-dni" class="btn-search">Buscar</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombres">Nombres</label>
+                            <input type="text" id="nombres" name="nombres" class="form-control readonly-input" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos</label>
+                            <input type="text" id="apellidos" name="apellidos" class="form-control readonly-input" readonly required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" id="email" name="email" class="form-control" th:value="${#authentication?.name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pais">País</label>
+                            <select id="pais" name="pais" class="form-control" required>
+                                <option value="">Selecciona un país</option>
+                                <option value="Peru">Perú</option>
+                                <option value="Colombia">Colombia</option>
+                                <option value="Mexico">México</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Chile">Chile</option>
+                                <option value="España">España</option>
+                                <option value="EstadosUnidos">Estados Unidos</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Sede del Hotel</div>
+                    <div class="form-group">
+                        <label for="sede">Selecciona la sede</label>
+                        <select id="sede" name="sede" class="form-control" required>
+                            <option value="">Selecciona una sede</option>
+                            <option th:each="s : ${sedes}" th:value="${s.nombreSede}" th:text="${s.nombreSede}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="habitacion-group" style="display: none;">
+                        <label for="habitacion">Selecciona la habitación</label>
+                        <select id="habitacion" name="habitacion" class="form-control" required>
+                            <option value="">Selecciona una habitación</option>
+                        </select>
+                        <div id="habitacion-preview" style="display: none; margin-top: 10px; text-align: center;">
+                            <img id="habitacion-img" src="" alt="Vista previa de la habitación" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); max-height: 200px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Detalles de la Reserva</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fecha-entrada">Fecha de Entrada</label>
+                            <input type="date" id="fecha-entrada" name="fecha-entrada" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha-salida">Fecha de Salida</label>
+                            <input type="date" id="fecha-salida" name="fecha-salida" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adultos">Adultos</label>
+                            <select id="adultos" name="adultos" class="form-control" required>
+                                <option value="1">1 Adulto</option>
+                                <option value="2" selected>2 Adultos</option>
+                                <option value="3">3 Adultos</option>
+                                <option value="4">4 Adultos</option>
+                                <option value="5">5 Adultos</option>
+                                <option value="6">6 Adultos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ninos">Niños</label>
+                            <select id="ninos" name="ninos" class="form-control">
+                                <option value="0" selected>0 Niños</option>
+                                <option value="1">1 Niño</option>
+                                <option value="2">2 Niños</option>
+                                <option value="3">3 Niños</option>
+                                <option value="4">4 Niños</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" id="tipo-habitacion" name="tipo-habitacion">
+                </div>
+                <div class="form-section" style="border: none;">
+                    <label class="checkbox-item" style="display: flex; gap: 10px; align-items: center; color: var(--color-text-muted);">
+                        <input type="checkbox" id="terminos" name="terminos" required style="accent-color: var(--color-primary);">
+                        <span>Acepto los <a th:href="@{/info/terminos}" style="color: var(--color-primary);">Términos y Condiciones</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth">CONFIRMAR RESERVA</button>
+                
+                <div class="form-footer">
+                    <a th:href="@{/}">Volver al Inicio</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const preselectedRoom = /*[[${preselectedRoom}]]*/ null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const formContainer = document.querySelector('.auth-form-container');
+            if (formContainer) {
+                formContainer.scrollTop = 0;
+            }
+            
+            const fechaEntrada = document.getElementById('fecha-entrada');
+            const fechaSalida = document.getElementById('fecha-salida');
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            fechaEntrada.min = formatDate(tomorrow);
+            
+            const sedeSelect = document.getElementById('sede');
+            const habitacionSelect = document.getElementById('habitacion');
+            const habitacionGroup = document.getElementById('habitacion-group');
+            const tipoSelect = document.getElementById('tipo-habitacion');
+
+            const loadRooms = (sede, callback) => {
+                habitacionSelect.innerHTML = '<option value="">Cargando...</option>';
+                
+                if (sede) {
+                    habitacionGroup.style.display = 'block';
+                    fetch(`/api/habitaciones?sede=${encodeURIComponent(sede)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            habitacionSelect.innerHTML = '<option value="">Selecciona una habitación</option>';
+                            if (data.length > 0) {
+                                data.forEach(room => {
+                                    const option = document.createElement('option');
+                                    option.value = room.id_habitacion;
+                                    option.textContent = `Habitación ${room.numero_habitacion} - ${room.nombre_tipo} (S/.${room.precio_noche})`;
+                                    option.dataset.tipo = room.nombre_tipo;
+                                    
+                                    let imagePath = '/images/habitacion_default.jpg';
+                                    if (room.imagen_url) {
+                                        if (room.imagen_url.includes('/')) {
+                                            imagePath = room.imagen_url;
+                                        } else {
+                                            imagePath = `/images/habitaciones/${room.imagen_url}`;
+                                        }
+                                    }
+                                    option.dataset.image = imagePath;
+                                    
+                                    habitacionSelect.appendChild(option);
+                                });
+                            } else {
+                                habitacionSelect.innerHTML = '<option value="">No hay habitaciones disponibles en esta sede</option>';
+                            }
+                            if (callback) callback();
+                        })
+                        .catch(error => {
+                            habitacionSelect.innerHTML = '<option value="">Error al cargar habitaciones</option>';
+                        });
+                } else {
+                    habitacionGroup.style.display = 'none';
+                    habitacionSelect.innerHTML = '<option value="">Selecciona una habitación</option>';
+                    document.getElementById('habitacion-preview').style.display = 'none';
+                }
+            };
+
+            sedeSelect.addEventListener('change', function() {
+                loadRooms(this.value);
+            });
+
+            if (preselectedRoom) {
+                const preselectedSedeName = preselectedRoom.nombreSede || preselectedRoom.nombre_sede;
+                if (preselectedSedeName) {
+                    sedeSelect.value = preselectedSedeName;
+                    loadRooms(preselectedSedeName, () => {
+                        habitacionSelect.value = preselectedRoom.idHabitacion;
+                        habitacionSelect.dispatchEvent(new Event('change'));
+                    });
+                }
+            }
+
+            const btnBuscarDni = document.getElementById('btn-buscar-dni');
+            const inputDni = document.getElementById('dni');
+            const inputNombres = document.getElementById('nombres');
+            const inputApellidos = document.getElementById('apellidos');
+
+            btnBuscarDni.addEventListener('click', function() {
+                const dni = inputDni.value;
+                const errorDiv = document.getElementById('formError');
+                
+                if (dni.length !== 8) {
+                    errorDiv.innerText = 'El DNI debe tener 8 dígitos';
+                    errorDiv.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+
+                const originalText = this.innerText;
+                this.innerText = 'Buscando...';
+                this.disabled = true;
+                errorDiv.style.display = 'none';
+
+                fetch(`/api/consultar-dni?dni=${encodeURIComponent(dni)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const nombresInput = document.getElementById('nombres');
+                            const apellidosInput = document.getElementById('apellidos');
+
+                            const nombresValor = data.nombres || '';
+                            const apellidosValor = `${data.apellidoPaterno || ''} ${data.apellidoMaterno || ''}`.trim();
+
+                            nombresInput.value = nombresValor;
+                            apellidosInput.value = apellidosValor;
+
+                            nombresInput.removeAttribute('readonly');
+                            apellidosInput.removeAttribute('readonly');
+                            nombresInput.style.color = '#333';
+                            apellidosInput.style.color = '#333';
+                            nombresInput.focus();
+                            
+                            errorDiv.style.display = 'none';
+                        } else {
+                            errorDiv.innerText = (data.message || 'No se encontró el DNI.');
+                            errorDiv.style.display = 'block';
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    })
+                    .catch(error => {
+                        errorDiv.innerText = 'Error al consultar RENIEC.';
+                        errorDiv.style.display = 'block';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    })
+                    .finally(() => {
+                        this.innerText = originalText;
+                        this.disabled = false;
+                    });
+            });
+
+            habitacionSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const tipo = selectedOption.dataset.tipo;
+                const image = selectedOption.dataset.image;
+                
+                const previewContainer = document.getElementById('habitacion-preview');
+                const previewImage = document.getElementById('habitacion-img');
+
+                if (image && this.value !== "") {
+                    previewImage.src = image;
+                    previewContainer.style.display = 'block';
+                } else {
+                    previewContainer.style.display = 'none';
+                }
+                
+                if (tipo) {
+                    document.getElementById('tipo-habitacion').value = tipo;
+                }
+            });
+            
+            fechaEntrada.addEventListener('change', function() {
+                const entrada = new Date(this.value);
+                const minSalida = new Date(entrada);
+                minSalida.setDate(minSalida.getDate() + 1);
+                fechaSalida.min = formatDate(minSalida);
+                
+                if (fechaSalida.value && new Date(fechaSalida.value) < minSalida) {
+                    fechaSalida.value = formatDate(minSalida);
+                }
+            });
+
+            document.getElementById('reservaForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const telefono = document.getElementById('telefono').value;
+                const phoneRegex = /^9[0-9]{8}$/;
+                const errorDiv = document.getElementById('formError');
+                
+                if (!phoneRegex.test(telefono)) {
+                    errorDiv.innerText = 'El teléfono debe tener 9 dígitos y empezar con 9';
+                    errorDiv.style.display = 'block';
+                    document.querySelector('.auth-form-container').scrollTop = 0;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return false;
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+
+                const formData = new URLSearchParams();
+                formData.append('dni', document.getElementById('dni').value);
+                formData.append('nombres', document.getElementById('nombres').value);
+                formData.append('apellidos', document.getElementById('apellidos').value);
+                formData.append('telefono', document.getElementById('telefono').value);
+                formData.append('pais', document.getElementById('pais').value);
+                formData.append('sede', document.getElementById('sede').value);
+                formData.append('habitacion', document.getElementById('habitacion').value);
+                formData.append('fecha_entrada', document.getElementById('fecha-entrada').value);
+                formData.append('fecha_salida', document.getElementById('fecha-salida').value);
+                formData.append('adultos', document.getElementById('adultos').value);
+                formData.append('ninos', document.getElementById('ninos').value);
+
+                fetch('/api/realizar-reserva', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else {
+                        errorDiv.innerText = data.message || 'Error al realizar la reserva';
+                        errorDiv.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    errorDiv.innerText = 'Error de conexión';
+                    errorDiv.style.display = 'block';
+                });
+            });
+            
+        });
+    </script>
+</body>
+</html>

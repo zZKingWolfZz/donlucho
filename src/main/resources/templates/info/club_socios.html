@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{info/header_info :: header_info('Club de Socios | Don Lucho')}"></head>
+<body>
+    <header class="header-info">
+        <nav th:replace="~{info/header_info :: nav}"></nav>
+    </header>
+    
+    <main class="info-content">
+        <h1>Club de Socios e Inversionistas</h1>
+        
+        <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80" alt="Socios estratégicos" class="hero-image">
+
+        <div class="text-image-row reverse">
+            <div class="text">
+                <h2>Cimentando el Futuro Juntos</h2>
+                <p>El Club de Socios es el punto de encuentro exclusivo para nuestros accionistas e inversionistas estratégicos. Una comunidad selecta de visionarios que comparten nuestro compromiso con la excelencia y el crecimiento sostenible.</p>
+                <p>Aquí, la transparencia y la comunicación directa son los pilares. Manténgase informado sobre el rumbo de la compañía y participe activamente en la construcción de nuestro legado.</p>
+            </div>
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80" alt="Red de negocios">
+            </div>
+        </div>
+
+        <h2>Beneficios Corporativos</h2>
+        <div class="card-grid">
+            <div class="info-card">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Información Privilegiada</h3>
+                <p>Acceso prioritario a reportes trimestrales, análisis de mercado y proyecciones de nuevas aperturas.</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-hand-holding-usd"></i>
+                <h3>Retorno de Inversión</h3>
+                <p>Modelos de rentabilidad atractivos y dividendos preferenciales para nuestros socios fundadores.</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-network-wired"></i>
+                <h3>Networking</h3>
+                <p>Eventos anuales de alto nivel para conectar con otros líderes de la industria y expandir su red de contactos.</p>
+            </div>
+        </div>
+    </main>
+
+    
+
+    <footer class="footer" id="footer">
+        <!-- Newsletter Section -->
+        <div class="newsletter-bar">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <span class="newsletter-label">RECIBE TODAS LAS OFERTAS EN TU EMAIL</span>
+                    <h2>Suscríbete a nuestra newsletter</h2>
+                </div>
+                <div class="newsletter-form">
+                    <form action="#" method="POST" class="subscribe-form">
+                        <div class="input-group">
+                            <input type="email" placeholder="Introduce tu e-mail *" required>
+                            <button type="submit">Enviar</button>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="privacy-check" required>
+                            <label for="privacy-check">Acepto las condiciones que se detallan en la cláusula de privacidad</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Footer Content -->
+        <div class="footer-main">
+            <div class="footer-grid">
+                <!-- Column 1: Brand & Social -->
+                <div class="footer-col brand-col">
+                    <h3 class="footer-logo">DON LUCHO</h3>
+                    <p class="brand-subtitle">HOTEL & HOSTAL</p>
+                    
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@yico.yico4/video/7476886057930263813" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://wa.me/51987654321" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+
+                    <div class="pro-box">
+                        <h4>DON LUCHO Pro</h4>
+                        <p>El portal para profesionales. ¡Accede a todas las herramientas de venta e información!</p>
+                        <a th:href="@{/info/don_lucho_pro}" class="btn-pro">Más información</a>
+                    </div>
+                </div>
+
+                <!-- Column 2: About -->
+                <div class="footer-col">
+                    <h4>ACERCA DE DON LUCHO</h4>
+                    <ul class="footer-links">
+                        <li><a th:href="@{/info/acerca}">Acerca de Don Lucho</a></li>
+                        <li><a th:href="@{/info/nuestras_marcas}">Nuestras Marcas</a></li>
+                        <li><a th:href="@{/info/club_elite}">Club Elite</a></li>
+                        <li><a th:href="@{/info/compromiso_social}">Compromiso Social</a></li>
+                        <li><a th:href="@{/info/revista}">Revista Don Lucho</a></li>
+                        <li><a th:href="@{/info/sala_prensa}">Sala de Prensa</a></li>
+                        <li><a th:href="@{/info/nuevas_aperturas}">Nuevas aperturas</a></li>
+                        <li><a th:href="@{/info/codigo_etico}">Código Ético</a></li>
+                        <li><a th:href="@{/info/prevencion_fraude}">Prevención del fraude</a></li>
+                        <li><a th:href="@{/info/canal_denuncias}">Canal de denuncias</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Services -->
+                <div class="footer-col">
+                    <h4>SERVICIOS DON LUCHO</h4>
+                    <ul class="footer-links">
+                        <li><a th:href="@{/info/eventos_fiestas}">Eventos & Fiestas</a></li>
+                        <li><a th:href="@{/info/membresia_class}">Membresía Class</a></li>
+                        <li><a th:href="@{/info/don_lucho_pro}">Don Lucho Pro</a></li>
+                        <li><a th:href="@{/info/club_socios}">Club de Socios</a></li>
+                        <li><a th:href="@{/info/profesionales}">Profesionales</a></li>
+                        <li><a th:href="@{/info/faqs}">FAQ's</a></li>
+                        <li><a th:href="@{/info/contactar}">Contactar</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Reservations & App -->
+                <div class="footer-col">
+                    <h4>RESERVAS</h4>
+                    <ul class="footer-links">
+                        <li><a th:href="@{/reservar/reservas}">Reserva tu hotel</a></li>
+                        <li><a th:href="@{/info/codigo_corporativo}">Código corporativo</a></li>
+                        <li><a th:href="@{/info/bodas_eventos}">Bodas y Eventos</a></li>
+                        <li><a th:href="@{/info/reuniones}">Reuniones</a></li>
+                    </ul>
+
+                    <div class="app-promo">
+                        <h4>TU EXPERIENCIA AL COMPLETO</h4>
+                        <h3>Descubre la App de DON LUCHO</h3>
+                        <div class="app-buttons">
+                            <a th:href="@{/info/descargar_app}" aria-label="Android App"><i class="fab fa-android"></i></a>
+                        </div>
+                        <p class="app-note">DESCARGALA PARA ANDROID</p>
+                    </div>
+
+                    <div class="certifications">
+                        <div class="cert-logo">
+                            <span>AENOR</span>
+                            <small>COMPLIANCE PENAL</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <div class="copyright">
+                    <p>&copy; <span th:text="${#calendars.year(#calendars.createNow())}">2026</span> Hotel y Hostal Don Lucho. Todos los derechos reservados.</p>
+                </div>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-amex" title="American Express"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                </div>
+                <div class="legal-links">
+                    <a th:href="@{/info/privacidad}">Privacidad</a>
+                    <a th:href="@{/info/terminos}">Términos</a>
+                    <a th:href="@{/info/cookies}">Cookies</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal (Preserved) -->
+        <div id="descriptionModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <h3 id="modalTitle" class="modal-title"></h3>
+                <p id="modalDescription" class="modal-description"></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    function openModal(element) {
+        event.preventDefault();
+        const title = element.getAttribute('data-title');
+        const description = element.getAttribute('data-description');
+        
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalDescription').textContent = description;
+        
+        const modal = document.getElementById('descriptionModal');
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('descriptionModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300); 
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('descriptionModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+    </script>
+    <script th:src="@{/script.js}"></script>
+</body>
+</html>

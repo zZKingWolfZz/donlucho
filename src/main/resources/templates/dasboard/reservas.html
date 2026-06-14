@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas - Panel de Administración</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" th:href="@{/utiles/images/favicon.png}" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/utiles/images/favicon.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/utiles/images/favicon.png}">
+    <link rel="apple-touch-icon" th:href="@{/utiles/images/favicon.png}">
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="nav">
+        <div class="nav_logo">
+            <a th:href="@{/}">
+                <h2>DON LUCHO</h2>
+            </a>
+        </div>
+        <ul class="nav-links">
+             <li><a th:href="@{/}">Inicio</a></li>
+             <li><a th:href="@{/dashboard}">Resumen</a></li>
+             <li><a th:href="@{/reservas}" class="active">Reservas</a></li>
+             <li><a th:href="@{/clientes}">Clientes</a></li>
+             <li><a th:href="@{/habitaciones}">Habitaciones</a></li>
+             <li><a th:href="@{/miembros}">Miembros</a></li>
+             <li><a th:href="@{/administradores}">Admin</a></li>
+             <li><a th:href="@{/logout}"><input type="button" value="Cerrar Sesión" id="auth-button"></a></li>
+        </ul>
+        <div class="menu-toggle">
+            <img th:src="@{/utiles/images/barra.png}" class="nav_img" alt="menu">
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <main class="main-content">
+            <div class="welcome-section">
+                <h1>Gestión de Reservas</h1>
+                <div class="admin-toolbar">
+                    <form method="GET" th:action="@{/reservas}" class="admin-filter-form">
+                        <div class="search-group">
+                            <input type="text" name="search" placeholder="Buscar por DNI..." th:value="${param.search}" class="form-control" onchange="this.form.submit()">
+                        </div>
+                        <a th:if="${param.search != null}" th:href="@{/reservas}" class="btn-secondary btn-sm">X</a>
+                    </form>
+                </div>
+            </div>
+            <div th:if="${error != null}" style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${success != null}" style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                <span th:text="${success}"></span>
+            </div>
+            <th:block th:if="${#lists.isEmpty(reservas)}">
+                <div class="welcome-section" style="background: transparent; border: none; box-shadow: none;">
+                    <h3>No hay reservas registradas</h3>
+                    <p>Aún no se han realizado reservas en el sistema.</p>
+                </div>
+            </th:block>
+            <th:block th:unless="${#lists.isEmpty(reservas)}">
+                <div class="custom-table-container">
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Email</th>
+                                    <th>Habitación / Sede</th>
+                                    <th>Estancia</th>
+                                    <th>Huéspedes</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Reserva</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="reserva : ${reservas}">
+                                    <td data-label="ID" th:text="${reserva.idReserva}"></td>
+                                    <td data-label="Cliente" class="mobile-name">
+                                        <span th:text="${reserva.nombres != null and !#strings.isEmpty(reserva.nombres) ? (reserva.nombres + ' ' + (reserva.apellidos != null ? reserva.apellidos : '')) : (reserva.nombreUsuario != null ? reserva.nombreUsuario : 'N/A')}"></span>
+                                        <small style="display: block; color: var(--color-text-light); margin-top: 0.2rem;" th:text="${reserva.dni != null ? 'DNI: ' + reserva.dni : 'Sin DNI'}"></small>
+                                        <i class="fas fa-chevron-down mobile-expand-icon"></i>
+                                    </td>
+                                    <td data-label="Email" th:text="${reserva.email != null ? reserva.email : 'N/A'}"></td>
+                                    <td data-label="Habitación / Sede">
+                                        <span th:text="${reserva.numeroHabitacion != null ? 'Hab. ' + reserva.numeroHabitacion : 'Asignada al llegar'}"></span>
+                                        <small style="display: block; color: var(--color-text-light); margin-top: 0.2rem;" th:text="${reserva.nombreSede != null ? reserva.nombreSede : 'N/A'}"></small>
+                                    </td>
+                                    <td data-label="Estancia" th:text="${#temporals.format(reserva.fechaEntrada, 'dd/MM/yyyy')} + ' al ' + ${#temporals.format(reserva.fechaSalida, 'dd/MM/yyyy')}"></td>
+                                    <td data-label="Huéspedes" th:text="${reserva.cantidadAdultos} + ' Ad' + (${reserva.cantidadNinos != null and reserva.cantidadNinos > 0} ? ', ' + reserva.cantidadNinos + ' Ni' : '')"></td>
+                                    <td data-label="Estado">
+                                        <span th:class="'status-badge status-' + ${#strings.toLowerCase(reserva.estado)}"
+                                              th:text="${reserva.estado}"></span>
+                                    </td>
+                                    <td data-label="Fecha Reserva" th:text="${reserva.fechaReserva != null ? #temporals.format(reserva.fechaReserva, 'dd/MM/yyyy') : ''}"></td>
+                                    <td data-label="Acciones">
+                                        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                            <form th:if="${#strings.toLowerCase(reserva.estado) == 'pendiente'}" th:action="@{/reservas_actions}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de confirmar esta reserva?');">
+                                                <input type="hidden" name="action" value="confirmar">
+                                                <input type="hidden" name="id_reserva" th:value="${reserva.idReserva}">
+                                                <button type="submit" title="Confirmar" style="background: none; border: none; cursor: pointer; color: #2ecc71; font-size: 1.1rem;">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                            <form th:if="${#strings.toLowerCase(reserva.estado) == 'confirmada'}" th:action="@{/reservas_actions}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de finalizar esta reserva?');">
+                                                <input type="hidden" name="action" value="finalizar">
+                                                <input type="hidden" name="id_reserva" th:value="${reserva.idReserva}">
+                                                <button type="submit" title="Finalizar" style="background: none; border: none; cursor: pointer; color: #3498db; font-size: 1.1rem;">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            </form>
+                                            <form th:if="${#strings.toLowerCase(reserva.estado) != 'cancelada' && #strings.toLowerCase(reserva.estado) != 'finalizada'}" th:action="@{/reservas_actions}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de cancelar esta reserva?');">
+                                                <input type="hidden" name="action" value="cancelar">
+                                                <input type="hidden" name="id_reserva" th:value="${reserva.idReserva}">
+                                                <button type="submit" title="Cancelar" style="background: none; border: none; cursor: pointer; color: #e74c3c; font-size: 1.1rem;">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </button>
+                                            </form>
+                                            <form th:action="@{/reservas_actions}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar esta reserva permanentemente?');">
+                                                <input type="hidden" name="action" value="eliminar">
+                                                <input type="hidden" name="id_reserva" th:value="${reserva.idReserva}">
+                                                <button type="submit" title="Eliminar" style="background: none; border: none; cursor: pointer; color: #c0392b; font-size: 1.1rem;">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                    Mostrando <span th:text="${#lists.size(reservas)}"></span> de <span th:text="${total_registros}"></span> reservas
+                </div>
+            </th:block>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Habitación - Hotel Don Lucho</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" th:href="@{/utiles/images/favicon.png}" type="image/png">
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <nav class="nav">
+        <div class="nav_logo">
+            <a th:href="@{/}">
+                <h2>DON LUCHO</h2>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/dashboard}">Resumen</a></li>
+            <li><a th:href="@{/reservas}">Reservas</a></li>
+            <li><a th:href="@{/clientes}">Clientes</a></li>
+            <li><a th:href="@{/habitaciones}" class="active">Habitaciones</a></li>
+            <li><a th:href="@{/miembros}">Miembros</a></li>
+            <li><a th:href="@{/administradores}">Admin</a></li>
+            <li><a th:href="@{/logout}"><input type="button" value="Cerrar Sesión" id="auth-button"></a></li>
+        </ul>
+        <div class="menu-toggle">
+            <img th:src="@{/utiles/images/barra.png}" class="nav_img" alt="menu">
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <main class="main-content">
+            <div class="form-container">
+                <h1
+                    style="color: var(--accent-gold); text-align: center; margin-bottom: 2rem; font-family: var(--font-heading);">
+                    Agregar Nueva Habitación</h1>
+                <div th:if="${error != null}"
+                    style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                    <span th:text="${error}"></span>
+                </div>
+                <div th:if="${success != null}"
+                    style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                    <span th:text="${success}"></span>
+                </div>
+                <form method="POST" th:action="@{/habitaciones/guardar}" th:object="${habitacion}" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="numero_habitacion">Número de Habitación:</label>
+                        <input type="text" id="numero_habitacion" name="numero_habitacion"
+                            th:field="*{numeroHabitacion}" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="piso">Piso:</label>
+                        <input type="number" id="piso" name="piso" th:field="*{piso}" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_noche">Precio por Noche (S/.):</label>
+                        <input type="number" id="precio_noche" name="precio_noche" step="0.01" min="0"
+                            th:field="*{precioNoche}" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_sede">Sede:</label>
+                        <select id="id_sede" name="id_sede" th:field="*{idSede}" required class="form-control">
+                            <option value="">Seleccione una sede</option>
+                            <option th:each="sede : ${sedes}" th:value="${sede.idSede}" th:text="${sede.nombreSede}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre_tipo">Tipo de Habitación:</label>
+                        <select id="nombre_tipo" name="nombre_tipo" th:field="*{nombreTipo}" required
+                            class="form-control">
+                            <option value="">Seleccione un tipo</option>
+                            <option value="Simple">Simple</option>
+                            <option value="Estándar">Estándar</option>
+                            <option value="Doble">Doble</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Matrimonial">Matrimonial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select id="estado" name="estado" th:field="*{estado}" required class="form-control">
+                            <option value="Disponible">Disponible</option>
+                            <option value="Ocupada">Ocupada</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Reservada">Reservada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea id="descripcion" name="descripcion" th:field="*{descripcion}" class="form-control"
+                            rows="3"></textarea>
+                    </div>
+
+                    <!-- ===== IMAGE SELECTOR WIDGET ===== -->
+                    <input type="hidden" name="imagen_source" id="imagen_source_agregar" value="url">
+                    <div class="form-group">
+                        <label>Imagen de la Habitación:</label>
+                        <!-- Toggle tabs -->
+                        <div class="img-source-tabs">
+                            <button type="button" class="img-tab active" id="tab-url-agregar" onclick="switchImgTab('url','agregar')">
+                                <i class="fas fa-link"></i> URL
+                            </button>
+                            <button type="button" class="img-tab" id="tab-file-agregar" onclick="switchImgTab('file','agregar')">
+                                <i class="fas fa-upload"></i> Subir Archivo
+                            </button>
+                        </div>
+
+                        <!-- URL input panel -->
+                        <div id="panel-url-agregar" class="img-panel">
+                            <input type="text" id="imagen_url_input_agregar" name="imagen_url_input"
+                                   class="form-control" placeholder="https://ejemplo.com/imagen.jpg o /utiles/images/habitacion_default.jpg"
+                                   oninput="previewFromUrl(this.value, 'img-preview-agregar')">
+                        </div>
+
+                        <!-- File upload panel -->
+                        <div id="panel-file-agregar" class="img-panel" style="display:none;">
+                            <div class="drop-zone" id="drop-zone-agregar"
+                                 onclick="document.getElementById('imagen_file_agregar').click()"
+                                 ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                                 ondragleave="this.classList.remove('drag-over')"
+                                 ondrop="handleDrop(event,'agregar')">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Arrastra una imagen aquí o <strong>haz clic para seleccionar</strong></p>
+                                <small>Formatos: JPG, PNG, WEBP · Máx. 5 MB</small>
+                            </div>
+                            <input type="file" id="imagen_file_agregar" name="imagen_file"
+                                   accept="image/jpeg,image/png,image/webp,image/gif"
+                                   style="display:none;"
+                                   onchange="previewFromFile(this,'img-preview-agregar','drop-zone-agregar')">
+                        </div>
+
+                        <!-- Live preview -->
+                        <div class="img-preview-wrapper" id="img-preview-agregar" style="display:none;">
+                            <img id="img-preview-img-agregar" src="" alt="Vista previa">
+                            <button type="button" class="img-preview-remove" onclick="clearPreview('agregar')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- ===== END IMAGE WIDGET ===== -->
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Guardar Habitación</button>
+                        <a th:href="@{/habitaciones}" class="btn-secondary">Volver</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/img-upload.js}"></script>
+</body>
+
+</html>

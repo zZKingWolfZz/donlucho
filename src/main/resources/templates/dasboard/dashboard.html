@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Hotel Don Lucho</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" th:href="@{/utiles/images/favicon.png}" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/utiles/images/favicon.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/utiles/images/favicon.png}">
+    <link rel="apple-touch-icon" th:href="@{/utiles/images/favicon.png}">
+</head>
+<body>
+    <!-- Top Navbar (Index Style, Admin Context) -->
+    <nav class="nav">
+        <div class="nav_logo">
+            <a th:href="@{/}">
+                <h2>DON LUCHO</h2>
+            </a>
+        </div>
+        <ul class="nav-links">
+             <li><a th:href="@{/}">Inicio</a></li>
+             <li><a th:href="@{/dashboard}" class="active">Resumen</a></li>
+             <li><a th:href="@{/reservas}">Reservas</a></li>
+             <li><a th:href="@{/clientes}">Clientes</a></li>
+             <li><a th:href="@{/habitaciones}">Habitaciones</a></li>
+             <li><a th:href="@{/miembros}">Miembros</a></li>
+             <li><a th:href="@{/administradores}">Admin</a></li>
+             <li><a th:href="@{/logout}"><input type="button" value="Cerrar Sesión" id="auth-button"></a></li>
+        </ul>
+        <div class="menu-toggle">
+            <img th:src="@{/utiles/images/barra.png}" class="nav_img" alt="menu">
+        </div>
+    </nav>
+    
+    <div class="dashboard-container">
+        <!-- Sidebar removed/hidden via CSS, but removing form structure here for cleanup -->
+        <main class="main-content">
+            <!-- Main Content Header removed -->
+            <section>
+                <div class="welcome-section">
+                    <h1>Bienvenido</h1>
+                    <p>Panel de administración del Hotel Don Lucho</p>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h2 style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1.5rem;">Últimas Reservas</h2>
+                    <th:block th:if="${#lists.isEmpty(ultimas_reservas)}">
+                        <p style="color: var(--text-muted);">No hay reservas recientes.</p>
+                    </th:block>
+                    <th:block th:unless="${#lists.isEmpty(ultimas_reservas)}">
+                        <div class="table-responsive">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>DNI/Correo</th>
+                                        <th>Habitación</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="reserva : ${ultimas_reservas}">
+                                        <td data-label="ID" th:text="${reserva.idReserva}"></td>
+                                        <td data-label="Cliente" class="mobile-name">
+                                            <span th:text="${reserva.nombreUsuario != null ? reserva.nombreUsuario : 'N/A'}"></span>
+                                            <i class="fas fa-chevron-down mobile-expand-icon"></i>
+                                        </td>
+                                        <td data-label="DNI/Correo" th:text="${reserva.email != null ? reserva.email : 'N/A'}"></td>
+                                        <td data-label="Habitación" th:text="${reserva.numeroHabitacion != null ? reserva.numeroHabitacion : 'N/A'}"></td>
+                                        <td data-label="Fecha" th:text="${reserva.fechaReserva != null ? #temporals.format(reserva.fechaReserva, 'dd/MM/yyyy') : ''}"></td>
+                                        <td data-label="Estado">
+                                            <span th:class="'status-badge status-' + ${#strings.toLowerCase(reserva.estado)}"
+                                                  th:text="${reserva.estado}"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top: 1rem; text-align: right;">
+                            <a th:href="@{/reservas}" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Ver todas las reservas &rarr;</a>
+                        </div>
+                    </th:block>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h2 style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1.5rem;">Clientes Presenciales Recientes</h2>
+                    <th:block th:if="${#lists.isEmpty(ultimos_clientes)}">
+                        <p style="color: var(--text-muted);">No hay clientes registrados recientemente.</p>
+                    </th:block>
+                    <th:block th:unless="${#lists.isEmpty(ultimos_clientes)}">
+                        <div class="table-responsive">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>DNI</th>
+                                        <th>Habitación</th>
+                                        <th>Fecha Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cliente : ${ultimos_clientes}">
+                                        <td data-label="ID" th:text="${cliente.idCliente}"></td>
+                                        <td data-label="Cliente" class="mobile-name">
+                                            <span th:text="${cliente.nombres + ' ' + cliente.apellidos}"></span>
+                                            <i class="fas fa-chevron-down mobile-expand-icon"></i>
+                                        </td>
+                                        <td data-label="DNI" th:text="${cliente.dni}"></td>
+                                        <td data-label="Habitación">
+                                            <span th:if="${cliente.numeroHabitacion != null}" style="color: var(--accent-gold); font-weight: 500;" th:text="${cliente.numeroHabitacion}"></span>
+                                            <span th:if="${cliente.numeroHabitacion == null}">N/A</span>
+                                        </td>
+                                        <td data-label="Fecha Registro" th:text="${cliente.fechaRegistro != null ? #temporals.format(cliente.fechaRegistro, 'dd/MM/yyyy') : ''}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top: 1rem; text-align: right;">
+                            <a th:href="@{/clientes}" style="color: var(--accent-gold); text-decoration: none; font-weight: 500;">Ver todos los clientes &rarr;</a>
+                        </div>
+                    </th:block>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h2 style="color: var(--text-light); margin-bottom: 2rem; font-size: 1.5rem;">Accesos Rápidos</h2>
+                    <div class="quick-actions-grid">
+                        <a th:href="@{/reservas}" class="action-card">
+                            <span>Gestionar Reservas</span>
+                        </a>
+                        <a th:href="@{/miembros}" class="action-card">
+                            <span>Gestionar Miembros</span>
+                        </a>
+                        <a th:href="@{/habitaciones}" class="action-card">
+                            <span>Gestionar Habitaciones</span>
+                        </a>
+                        <a th:href="@{/}" class="action-card">
+                            <span>Ver Sitio Web</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>
