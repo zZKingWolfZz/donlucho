@@ -1,6 +1,6 @@
 package com.example.donlucho.services;
 
-import com.example.donlucho.dao.IClienteDAO;
+import com.example.donlucho.repository.ClienteRepositorio;
 import com.example.donlucho.model.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,56 +11,56 @@ import java.util.List;
 public class ClienteServicio implements IClienteServicio {
 
     @Autowired
-    private IClienteDAO clienteDAO;
+    private ClienteRepositorio clienteRepositorio;
 
     @Override
     public List<Cliente> listarClientes() {
-        return clienteDAO.findAll();
+        return clienteRepositorio.findAll();
     }
 
     @Override
     public Cliente guardarCliente(Cliente cliente) {
-        return clienteDAO.save(cliente);
+        return clienteRepositorio.save(cliente);
     }
 
     @Override
     public Cliente buscarPorId(Integer id) {
-        return clienteDAO.findById(id).orElse(null);
+        return clienteRepositorio.findById(id).orElse(null);
     }
 
     @Override
     public void eliminarCliente(Integer id) {
-        clienteDAO.deleteById(id);
+        clienteRepositorio.deleteById(id);
     }
 
     @Override
     public Cliente buscarPorDni(String dni) {
-        List<Cliente> list = clienteDAO.findByDni(dni);
+        List<Cliente> list = clienteRepositorio.findByDni(dni);
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public List<Cliente> buscarPorNombre(String nombre) {
-        return clienteDAO.findByNombres(nombre);
+        return clienteRepositorio.findByNombresContainingIgnoreCase(nombre);
     }
 
     @Override
     public List<Cliente> buscarPorApellido(String apellido) {
-        return clienteDAO.findByApellidos(apellido);
+        return clienteRepositorio.findByApellidosContainingIgnoreCase(apellido);
     }
 
     @Override
     public List<Cliente> buscarPorCorreo(String correo) {
-        return clienteDAO.findByEmail(correo);
+        return clienteRepositorio.findByEmailContainingIgnoreCase(correo);
     }
 
     @Override
     public List<Cliente> buscarPorTelefono(String telefono) {
-        return clienteDAO.findByTelefono(telefono);
+        return clienteRepositorio.findByTelefonoContainingIgnoreCase(telefono);
     }
 
     @Override
     public List<Cliente> buscarPorFechaRegistro(LocalDateTime fechaRegistro) {
-        return clienteDAO.findByFechaRegistroGreaterThan(fechaRegistro);
+        return clienteRepositorio.findByFechaRegistroGreaterThan(fechaRegistro);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.donlucho.services;
 
-import com.example.donlucho.dao.ISedeDAO;
+import com.example.donlucho.repository.SedeRepositorio;
 import com.example.donlucho.model.Sede;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,35 +11,35 @@ import java.util.Optional;
 public class SedeServicio implements ISedeServicio {
 
     @Autowired
-    private ISedeDAO sedeDAO;
+    private SedeRepositorio sedeRepositorio;
 
     @Override
     public List<Sede> listarSedes() {
-        return sedeDAO.findAll();
+        return sedeRepositorio.findAll();
     }
 
     @Override
     public Sede guardarSede(Sede Sede) {
-        return sedeDAO.save(Sede);
+        return sedeRepositorio.save(Sede);
     }
 
     @Override
     public Sede buscarPorId(Integer id) {
-        return sedeDAO.findById(id).orElse(null);
+        return sedeRepositorio.findById(id).orElse(null);
     }
 
     @Override
     public void eliminarSede(Integer id) {
-        sedeDAO.deleteById(id);
+        sedeRepositorio.deleteById(id);
     }
 
     @Override
     public List<Sede> listarSedesOrdenadasPorNombre() {
-        return sedeDAO.findAllByOrderByNombreSedeAsc();
+        return sedeRepositorio.findAllByOrderByNombreSedeAsc();
     }
 
     @Override
     public Optional<Sede> buscarPorNombre(String nombreSede) {
-        return sedeDAO.findByNombreSede(nombreSede);
+        return sedeRepositorio.findByNombreSede(nombreSede);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.donlucho.services;
 
-import com.example.donlucho.dao.IUsuarioDAO;
+import com.example.donlucho.repository.UsuarioRepositorio;
 import com.example.donlucho.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private IUsuarioDAO usuarioDAO;
+    private UsuarioRepositorio usuarioRepositorio;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = usuarioDAO.findByEmail(email)
+        Usuario usuario = usuarioRepositorio.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
 
         if (usuario.getEstado() == null || !usuario.getEstado()) {

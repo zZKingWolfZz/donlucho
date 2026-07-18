@@ -1,6 +1,6 @@
 package com.example.donlucho.services;
 
-import com.example.donlucho.dao.IUsuarioDAO;
+import com.example.donlucho.repository.UsuarioRepositorio;
 import com.example.donlucho.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,30 +11,30 @@ import java.util.Optional;
 public class UsuarioServicio implements IUsuarioServicio {
 
     @Autowired
-    private IUsuarioDAO usuarioDAO;
+    private UsuarioRepositorio usuarioRepositorio;
 
     @Override
     public List<Usuario> listarUsuarios() {
-        return usuarioDAO.findAll();
+        return usuarioRepositorio.findAll();
     }
 
     @Override
     public Usuario guardarUsuario(Usuario usuario) {
-        return usuarioDAO.save(usuario);
+        return usuarioRepositorio.save(usuario);
     }
 
     @Override
     public Usuario buscarPorId(Integer id) {
-        return usuarioDAO.findById(id).orElse(null);
+        return usuarioRepositorio.findById(id).orElse(null);
     }
 
     @Override
     public void eliminarUsuario(Integer id) {
-        usuarioDAO.deleteById(id);
+        usuarioRepositorio.deleteById(id);
     }
 
     @Override
     public Optional<Usuario> buscarPorEmail(String email) {
-        return usuarioDAO.findByEmail(email);
+        return usuarioRepositorio.findByEmail(email);
     }
 }

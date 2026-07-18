@@ -1,6 +1,6 @@
 package com.example.donlucho.services;
 
-import com.example.donlucho.dao.IReservaDAO;
+import com.example.donlucho.repository.ReservaRepositorio;
 import com.example.donlucho.model.Reserva;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,50 +11,50 @@ import java.util.Optional;
 public class ReservaServicio implements IReservaServicio {
 
     @Autowired
-    private IReservaDAO reservaDAO;
+    private ReservaRepositorio reservaRepositorio;
 
     @Override
     public List<Reserva> listarReservas() {
-        return reservaDAO.findAll();
+        return reservaRepositorio.findAll();
     }
 
     @Override
     public Reserva guardarReserva(Reserva reserva) {
-        return reservaDAO.save(reserva);
+        return reservaRepositorio.save(reserva);
     }
 
     @Override
     public Reserva buscarPorId(Integer id) {
-        return reservaDAO.findById(id).orElse(null);
+        return reservaRepositorio.findById(id).orElse(null);
     }
 
     @Override
     public void eliminarReserva(Integer id) {
-        reservaDAO.deleteById(id);
+        reservaRepositorio.deleteById(id);
     }
 
     @Override
     public List<Reserva> buscarPorUsuario(Integer idUsuario) {
-        return reservaDAO.findByIdUsuario(idUsuario);
+        return reservaRepositorio.findByIdUsuario(idUsuario);
     }
 
     @Override
     public List<Reserva> buscarPorHabitacion(Integer idHabitacion) {
-        return reservaDAO.findByIdHabitacion(idHabitacion);
+        return reservaRepositorio.findByIdHabitacion(idHabitacion);
     }
 
     @Override
     public List<Reserva> buscarPorUsuarioOrdenadoPorFechaDesc(Integer idUsuario) {
-        return reservaDAO.findByIdUsuarioOrderByFechaReservaDesc(idUsuario);
+        return reservaRepositorio.findByIdUsuarioOrderByFechaReservaDesc(idUsuario);
     }
 
     @Override
     public Optional<Reserva> buscarPorIdYUsuario(Integer idReserva, Integer idUsuario) {
-        return reservaDAO.findByIdReservaAndIdUsuario(idReserva, idUsuario);
+        return reservaRepositorio.findByIdReservaAndIdUsuario(idReserva, idUsuario);
     }
 
     @Override
     public List<Reserva> buscarPorDni(String dni) {
-        return reservaDAO.findByDniContaining(dni);
+        return reservaRepositorio.findByDniContaining(dni);
     }
 }

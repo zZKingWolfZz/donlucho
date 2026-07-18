@@ -1,6 +1,6 @@
 package com.example.donlucho.services;
 
-import com.example.donlucho.dao.IHabitacionDAO;
+import com.example.donlucho.repository.HabitacionRepositorio;
 import com.example.donlucho.model.Habitacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,50 +11,50 @@ import java.util.Optional;
 public class HabitacionServicio implements IHabitacionServicio {
 
     @Autowired
-    private IHabitacionDAO habitacionDAO;
+    private HabitacionRepositorio habitacionRepositorio;
 
     @Override
     public List<Habitacion> listarHabitaciones() {
-        return habitacionDAO.findAll();
+        return habitacionRepositorio.findAll();
     }
 
     @Override
     public Habitacion guardarHabitacion(Habitacion habitacion) {
-        return habitacionDAO.save(habitacion);
+        return habitacionRepositorio.save(habitacion);
     }
 
     @Override
     public Habitacion buscarPorId(Integer id) {
-        return habitacionDAO.findById(id).orElse(null);
+        return habitacionRepositorio.findById(id).orElse(null);
     }
 
     @Override
     public void eliminarHabitacion(Integer id) {
-        habitacionDAO.deleteById(id);
+        habitacionRepositorio.deleteById(id);
     }
 
     @Override
     public List<Habitacion> buscarPorSede(Integer idSede) {
-        return habitacionDAO.findByIdSede(idSede);
+        return habitacionRepositorio.findByIdSede(idSede);
     }
 
     @Override
     public List<Habitacion> buscarPorEstado(String estado) {
-        return habitacionDAO.findByEstado(estado);
+        return habitacionRepositorio.findByEstado(estado);
     }
 
     @Override
     public List<Habitacion> buscarPorSedeYEstadoOrdenadoPorNumeroAsc(Integer idSede, String estado) {
-        return habitacionDAO.findByIdSedeAndEstadoOrderByNumeroHabitacionAsc(idSede, estado);
+        return habitacionRepositorio.findByIdSedeAndEstadoOrderByNumeroHabitacionAsc(idSede, estado);
     }
 
     @Override
     public Optional<Habitacion> buscarPorIdYEstado(Integer idHabitacion, String estado) {
-        return habitacionDAO.findByIdHabitacionAndEstado(idHabitacion, estado);
+        return habitacionRepositorio.findByIdHabitacionAndEstado(idHabitacion, estado);
     }
 
     @Override
     public Optional<Habitacion> buscarPorIdYSedeYEstado(Integer idHabitacion, Integer idSede, String estado) {
-        return habitacionDAO.findByIdHabitacionAndIdSedeAndEstado(idHabitacion, idSede, estado);
+        return habitacionRepositorio.findByIdHabitacionAndIdSedeAndEstado(idHabitacion, idSede, estado);
     }
 }
